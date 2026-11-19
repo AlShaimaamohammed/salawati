@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#160b1f">
+<meta name="theme-color" content="#170D20">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,12 +13,12 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#160b1f;--card:#211230;--card2:#2a1740;--line:#3b2452;--hi:#6c4690;--hi2:#7d55a3;--pill:#3e2757;--ink:#f4edfb;--mute:#bba9cc;--lav:#d7bff2;--gold:#f2c94c}
+:root{--bg:#170D20;--card:#261630;--card2:#342041;--line:#4D345C;--hi:#684586;--hi2:#9066A8;--pill:#543568;--ink:#F7ECFC;--mute:#CAB6D6;--lav:#E8D4F6;--gold:#F5D48B}
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
-body{font:15px/1.6 "Cairo",system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow-x:clip}
+body{font:15px/1.6 "Alexandria",Tahoma,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow-x:clip}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
@@ -91,7 +91,10 @@ input.ltr{direction:ltr;text-align:left}
 .hr button{border:1px solid #5a3d78;background:transparent;border-radius:10px;min-height:36px;padding:0 10px;font-size:12px;white-space:nowrap}
 .hr button.arm{background:#a33f52;border-color:#a33f52}
 .setup{min-height:100vh;display:grid;align-content:center}
-.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#f4ecfb;color:#3a1f57;font-weight:700;border-radius:99px;padding:8px 18px;font-size:14px;z-index:10;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:max-content;max-width:90%;background:#5F3675;color:#fff;border:1px solid #B68DCC;border-radius:13px;padding:14px 18px;font-size:14px;line-height:1.8;text-align:center;z-index:30;opacity:0;transition:opacity .25s;pointer-events:none}
+.celebrate{background:#4B3455;border:1px solid #81619A;border-radius:15px;padding:14px;margin-top:12px;line-height:2;color:#EEDAF8;font-size:14px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:25;overflow:hidden}.confetti i{position:absolute;top:-20px;width:8px;height:13px;animation:fall 2.7s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(650deg)}}
+.note{font-size:12px;color:var(--mute);margin:0;line-height:1.9}
 .toast.show{opacity:1}
 @media(max-width:420px){.box{padding:18px 14px}.hero{padding:22px 18px}.tc{padding:14px 12px;min-height:140px}.tc b{font-size:16px}.stat{padding:14px 4px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -107,6 +110,7 @@ input.ltr{direction:ltr;text-align:left}
 <div id="app"></div>
 <div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="confetti" id="confetti"></div>
 
 <script>
 {
@@ -139,7 +143,23 @@ function milestones(target){
   if(target)out.push(target);
   return [...new Set(out)].sort((a,b)=>a-b);
 }
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),1800)}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),5500)}
+const PRAYERS={
+  day:['تقبّل الله منكِ 🤍 بارك الله في وقتكِ وجهدكِ، وأعانكِ على إتمام ما عليكِ.','تقبّل الله صلاتكِ 🌷 وجعل كل خطوة في قضائكِ سببًا للطمأنينة والثبات.','اللهم تقبّل منها وأعنها على ذكرك وشكرك وحسن عبادتك 🤍','أحسنتِ اليوم 💜 جعل الله عملكِ خالصًا لوجهه وبارك لكِ في يومكِ.','ربنا يتقبّل منكِ ✨ ويرزقكِ العزيمة والراحة في رحلة القضاء.','بارك الله في سعيكِ 🌸 ويسّر لكِ إتمام ما عليكِ يومًا بعد يوم.'],
+  night:['جعل الله ليلكِ نورًا 🌙 وتقبّل صلاتكِ ورزقكِ سكينة القلب.','تقبّل الله منكِ 🌙 وكتب لكِ في ليلكِ راحةً وطمأنينة.','اللهم اجعل هذا الليل شاهدًا لها بالخير، وتقبّل منها ما قضت 🤍','في هدوء الليل، خطوة جميلة اكتملت 💜 جعل الله قلبكِ مطمئنًا.','رزقكِ الله بركة الليل 🌙 وأعانكِ على الاستمرار في قضاء ما فات.','تقبّل الله صلاتكِ وجعل ليلكِ عامرًا بذكره وفضله ✨'],
+  extra:['ما شاء الله، هِمّة مباركة! ✨ زادكِ الله قوةً وثباتًا وتقبّل منكِ كل صلاة.','هَمّة زيادة وفرحة زيادة 🌟 ربنا يبارك لكِ في وقتكِ ويتقبّل منكِ.','زادكِ الله نشاطًا في الخير 💜 وتقبّل منكِ اليوم الإضافي.','اللهم بارك لها في همّتها، وأعنها على إتمام ما عليها 🌷','خطوة إضافية جميلة! ✨ جعلها الله في ميزان حسناتكِ وتقبّل منكِ.','ما شاء الله عليكِ 🌟 ربنا يثبتكِ ويزيدكِ من فضله.']
+};
+const lastP={day:-1,night:-1,extra:-1};
+function prayer(t){const l=PRAYERS[t];let i=Math.floor(Math.random()*l.length);if(l.length>1&&i===lastP[t])i=(i+1)%l.length;lastP[t]=i;return l[i]}
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=$('#confetti');c.innerHTML='';for(let i=0;i<65;i++){const x=document.createElement('i');x.style.left=Math.random()*100+'%';x.style.background=['#DAB4EF','#8656A0','#EEC981','#B68DCC'][i%4];x.style.animationDelay=Math.random()*.7+'s';c.appendChild(x)}setTimeout(()=>c.innerHTML='',3200)}
+const totalDone=s=>s.prior+s.logs.reduce((a,l)=>a+(+l.days||1),0);
+function afterAdd(type,before){
+  const s=view(),after=totalDone(s),today=cairo(),ms=milestones(s.target);
+  const hit=ms.find(m=>before<m&&after>=m);
+  const both=type!=='extra'&&s.logs.some(l=>l.date===today&&l.type==='day')&&s.logs.some(l=>l.date===today&&l.type==='night');
+  if(hit||both||type==='extra')confetti();
+  toast(prayer(type)+(hit?' 🎉 ووصلتي لمحطة '+fmt(hit)+' يوم!':both?' 🎉 وكده أتممتي قضاء يومين النهارده!':''));
+}
 
 async function call(body){
   const r=await fetch(cfg.url,{method:'POST',body:JSON.stringify({key:cfg.key,...body}),redirect:'follow'});
@@ -166,7 +186,7 @@ function push(op){pending.push(op);store.set('sw-pending',pending);render();sync
 function render(){
   if(!cfg)return renderSetup();
   const s=view(),today=cairo();
-  const done=s.prior+s.logs.reduce((a,l)=>a+(+l.days||1),0);
+  const done=totalDone(s);
   const target=s.target||0,left=Math.max(0,target-done);
   const pct=target?Math.min(100,done/target*100):0;
   const ms=milestones(target),got=ms.filter(m=>done>=m).length,next=ms.find(m=>done<m);
@@ -184,12 +204,12 @@ function render(){
     <section class="stats">
       <div class="stat"><small>أيام القضاء المكتملة</small><b>${fmt(done)}</b></div>
       <div class="stat"><small>المتبقي من الخطة</small><b>${target?fmt(left):'—'}</b></div>
-      <div class="stat"><small>نسبة الإنجاز</small><b>${target?(pct<10?pct.toFixed(2):pct.toFixed(1))+'%':'—'}</b></div>
+      <div class="stat"><small>نسبة الإنجاز</small><b>${target?(pct===0?'0':pct<0.01?pct.toFixed(3):pct.toFixed(2))+'%':'—'}</b></div>
     </section>
 
     <section class="box">
       <div class="bh"><h3>رحلة الإنجاز</h3><span class="badge">الهدف ${target?fmt(target)+' يوم':'لسه متحددش'}</span></div>
-      <div class="track"><i style="width:${pct}%"></i></div>
+      <div class="track"><i style="width:${pct>0?Math.max(0.8,pct):0}%;${pct>0?'':'min-width:0'}"></i></div>
       <div class="tm"><span>${fmt(done)} من ${fmt(target)} يوم</span><span>${!target?'حدّدي الهدف من «تعديل الخطة»':next?`باقي ${fmt(next-done)} يوم للمحطة الجاية`:'خلصتِ الخطة، تقبّل الله 🤍'}</span></div>
     </section>
 
@@ -200,7 +220,8 @@ function render(){
         <button class="tc${dayDone?' on':''}" data-t="day" aria-pressed="${dayDone}"><span class="ic">☀︎</span><b>قضاء اليوم</b><span class="d">يوم كامل مع الفروض الحالية</span><span class="pl">${dayDone?'✓ تم القضاء':'تسجيل ✓'}</span></button>
         <button class="tc${nightDone?' on':''}" data-t="night" aria-pressed="${nightDone}"><span class="ic">☾</span><b>قضاء قيام الليل</b><span class="d">قضاء يوم كامل بالليل</span><span class="pl">${nightDone?'✓ تم القضاء':'تسجيل ✓'}</span></button>
       </div>
-      <button class="extra" data-extra="1"><div><b>همّة زيادة ✨</b><span>قضيتي يوم كامل زيادة؟ سجّليه هنا – ينفع أكتر من مرة.</span></div><span class="st">⭐${extraN?`<span class="n">${extraN}</span>`:''}</span></button>
+      <button class="extra" data-extra="1"><div><b>همّة زيادة ✨</b><span>${extraN?`سجلتي ${fmt(extraN)} يوم إضافي النهارده — أضيفي كمان لو حابة`:'قضيتي يوم كامل زيادة؟ سجّليه هنا – ينفع أكتر من مرة.'}</span></div><span class="st">🌟</span></button>
+      ${dayDone&&nightDone?'<div class="celebrate">🎉 ما شاء الله! خلّصتي قضاء يومين النهارده. ربنا يتقبل منك.</div>':''}
     </section>
 
     <section class="box">
@@ -248,6 +269,7 @@ function renderModal(){
       <label>وأيام كمان<input name="d" type="number" min="0" max="364" inputmode="numeric" value="${d||''}"></label></div>
       <label>أيام اتقضت قبل التطبيق<input name="prior" type="number" min="0" inputmode="numeric" value="${s.prior||0}"></label>
       <p class="hint">السنة = ٣٦٥ يوم. التقدير بالزيادة أحوط.</p>
+      <p class="note">الهدف للتنظيم والمتابعة، ومش تحديد شرعي مؤكد لعدد الفوائت.</p>
       <button class="pb" type="submit">حفظ</button>
     </form>
     <p class="hint" style="margin-top:18px">الربط الحالي: <span dir="ltr">${esc((cfg.url||'').slice(0,46))}…</span></p>
@@ -266,13 +288,13 @@ document.addEventListener('click',e=>{
   const s=view(),today=cairo();
   if(b.dataset.t){
     const ex=s.logs.find(l=>l.date===today&&l.type===b.dataset.t);
-    if(ex)push({action:'remove',id:ex.id});
-    else{push({action:'add',id:uid(),date:today,type:b.dataset.t,days:1,ts:Date.now()});toast('تقبّل الله 🤍')}
-  }else if(b.dataset.extra){push({action:'add',id:uid(),date:today,type:'extra',days:1,ts:Date.now()});toast('همّة زيادة ✨ تقبّل الله')}
+    if(ex){if(confirm('تلغي تسجيل القضاء ده؟')){push({action:'remove',id:ex.id});toast('تم إلغاء التسجيل وتحديث الشيت')}}
+    else{const before=totalDone(s);push({action:'add',id:uid(),date:today,type:b.dataset.t,days:1,ts:Date.now()});afterAdd(b.dataset.t,before)}
+  }else if(b.dataset.extra){const before=totalDone(s);push({action:'add',id:uid(),date:today,type:'extra',days:1,ts:Date.now()});afterAdd('extra',before)}
   else if(b.dataset.open)openModal(b.dataset.open);
   else if(b.dataset.close)closeModal();
   else if(b.dataset.sync){lastErr='';sync()}
-  else if(b.dataset.del){if(armed!==b.dataset.del){armed=b.dataset.del;renderModal()}else{armed=null;push({action:'remove',id:b.dataset.del})}}
+  else if(b.dataset.del){if(armed!==b.dataset.del){armed=b.dataset.del;renderModal()}else{armed=null;push({action:'remove',id:b.dataset.del});toast('تم إلغاء التسجيل وتحديث الشيت')}}
   else if(b.dataset.relink){closeModal();renderSetup()}
 });
 
@@ -287,7 +309,7 @@ document.addEventListener('submit',async e=>{
     catch(err){cfg=old;renderSetup(/مطابقة/.test(err.message)?err.message:'مقدرتش أوصل للسكريبت. اتأكدي إن النشر Who has access: Anyone وإن الرابط آخره /exec')}
   }else if(e.target.id==='pf'){
     const target=Math.max(0,(+f.get('y')||0)*365+(+f.get('d')||0)),prior=Math.max(0,+f.get('prior')||0),name=String(f.get('name')||'').trim();
-    push({action:'plan',target,prior,name});closeModal();toast('اتحفظت الخطة')
+    push({action:'plan',target,prior,name});closeModal();toast('تم حفظ الإعدادات ✓')
   }
 });
 
